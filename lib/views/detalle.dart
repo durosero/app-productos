@@ -6,7 +6,7 @@ import 'package:productos/provider/imagen_provider.dart';
 import 'package:productos/provider/productos_provider.dart';
 import 'package:productos/utils/globlal.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:multipart_request/multipart_request.dart';
+import 'package:dio/dio.dart';
 
 class Detalle extends StatefulWidget {
   @override
@@ -167,22 +167,33 @@ class _DetalleState extends State<Detalle> {
     }
   }
 
-  void _subirImagen(BuildContext context) {
+  void _subirImagen(BuildContext context) async {
     //Validamos si selecciono imagen, no es asi guardamos directamente
     if (_image == null) {
       _guardarProducto(context);
     } else {
-      var request = MultipartRequest();
-      request.setUrl("https://mareliz.com/api/upload");
-      request.addFile("file", _image.path);
-      Response response = request.send();
-      response.onError = () {
-        Map info = {'message': "Error conexion perdida"};
-        muestraMensaje(info);
-      };
-
-      response.onComplete = (response) {
-        Map respuesta = json.decode(response);
+      Response response;
+      Dio dio = new Dio();
+      final formData = FormData.fromMap({
+        "name": "wendux",
+        "age": 25,
+        "file": await MultipartFile.fromFile(_image.path)
+      });
+      response = await dio.post(
+        "https://mareliz.com/api/upload",
+        data: formData,
+        onSendProgress: (int sent, int total) {
+          print("$sent $total");
+          setState(() {
+            String porcentaje = ((sent * 100) / total).toStringAsFixed(0);
+            btnMensaje = "Subiendo $porcentaje%";
+            activar = false;
+          });
+        },
+      );
+      if (response.statusCode == 200) {
+        print(response.data);
+        Map respuesta = response.data;
         imagenSubida = respuesta['data']['name'];
         print("la imagen subida al servidor es: " + imagenSubida);
         setState(() {
@@ -190,14 +201,13 @@ class _DetalleState extends State<Detalle> {
           activar = true;
         });
         _guardarProducto(context);
-      };
-
-      response.progress.listen((int progress) {
-        setState(() {
-          btnMensaje = "Subiendo $progress%";
-          activar = false;
-        });
-      });
+      } else {
+            Map info = {'message': "Servicio no disponible"};
+            muestraMensaje(info);
+            setState(() {
+               activar = true;
+            });
+      }
     }
   }
 
@@ -210,6 +220,7 @@ class _DetalleState extends State<Detalle> {
       });
     }
   }
+
   //METODO QUE ABRE LA GALERIA
   Future _galeria() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
