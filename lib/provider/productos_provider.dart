@@ -15,12 +15,13 @@ class ProductosProvider {
     //print(response.body);
   }
 
-   Future guardarProducto(String codigo, String descripcion, String precio) async {
+   Future guardarProducto(String codigo, String descripcion, String precio, String imagen) async {
      final url = _url+"/guardar";
     Map<String, String> params = {
       'codigo' : codigo,
       'descripcion' : descripcion,
-      'precio1' : precio
+      'precio1' : precio,
+      'imagen' : imagen
     }; 
 
     final response = await http.post(
@@ -35,12 +36,13 @@ class ProductosProvider {
     return decodeData;
   }
 
-  Future editarProducto(String id, String codigo, String descripcion, String precio) async {
+  Future editarProducto(String id, String codigo, String descripcion, String precio, String imagen) async {
      final url = _url+"/actualizar/$id";
     Map<String, String> params = {
       'codigo' : codigo,
       'descripcion' : descripcion,
-      'precio1' : precio
+      'precio1' : precio,
+      'imagen' : imagen
     }; 
     print(params);
     print(url);
