@@ -54,18 +54,20 @@ class _DetalleState extends State<Detalle> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.all(15.0),
-          child: Column(
-            children: <Widget>[
-              _mostrarFoto(),
-              _crearInputs(),
-              SizedBox(
-                height: 10,
-              ),
-              _crearBotones(context)
-            ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.all(15.0),
+            child: Column(
+              children: <Widget>[
+                _mostrarFoto(),
+                _crearInputs(),
+                SizedBox(
+                  height: 10,
+                ),
+                _crearBotones(context)
+              ],
+            ),
           ),
         ),
       ),
@@ -202,11 +204,11 @@ class _DetalleState extends State<Detalle> {
         });
         _guardarProducto(context);
       } else {
-            Map info = {'message': "Servicio no disponible"};
-            muestraMensaje(info);
-            setState(() {
-               activar = true;
-            });
+        Map info = {'message': "Servicio no disponible"};
+        muestraMensaje(info);
+        setState(() {
+          activar = true;
+        });
       }
     }
   }

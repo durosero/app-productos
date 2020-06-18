@@ -27,10 +27,14 @@ dependencies:
   fluttertoast: ^4.0.1
   image_picker: ^0.6.7
   dio: ^3.0.9
+#para soportes de idioma
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 
 # For information on the generic Dart part of this file, see the

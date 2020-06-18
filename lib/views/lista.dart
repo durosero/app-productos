@@ -24,10 +24,8 @@ class _ListaState extends State<Lista> {
     super.dispose();
   }
 
-
   @override
   void initState() {
-    
     cargarProductos();
 
     scrollController.addListener(() {
@@ -43,7 +41,6 @@ class _ListaState extends State<Lista> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
         title: Text("Lista"),
@@ -63,10 +60,7 @@ class _ListaState extends State<Lista> {
       ),
       body: Container(
         child: Stack(
-          children: <Widget>[
-            listaProductos(),
-             crearLoaging()
-             ],
+          children: <Widget>[listaProductos(), crearLoaging()],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -88,16 +82,14 @@ class _ListaState extends State<Lista> {
       data['data'].forEach((item) {
         productos.add(item);
       });
-      
+
       setState(() {
         loading = false;
       });
-      if(inicio > 10){
+      if (inicio > 10) {
         scrollController.animateTo(scrollController.position.pixels + 100,
-          curve: Curves.fastOutSlowIn, duration: Duration(milliseconds: 950));
+            curve: Curves.fastOutSlowIn, duration: Duration(milliseconds: 950));
       }
-      
-
     });
   }
 
@@ -115,16 +107,17 @@ class _ListaState extends State<Lista> {
             ),
           ),
           child: ListTile(
-            subtitle: Text(productos[index]['descripcion'], overflow: TextOverflow.fade,maxLines: 1,   softWrap: false),
+            subtitle: Text(productos[index]['descripcion'],
+                overflow: TextOverflow.fade, maxLines: 1, softWrap: false),
             title: Text(productos[index]['codigo']),
-            trailing: Text("\$"+productos[index]['precio1']) ,
+            trailing: Text("\$" + productos[index]['precio1']),
             onTap: () {
               Navigator.pushNamed(context, "detalle",
                   arguments: productos[index]);
             },
           ),
           onDismissed: (direccion) {
-           _eliminarProducto( productos[index]['codigo']);
+            _eliminarProducto(productos[index]['codigo']);
           },
         );
       },
@@ -141,10 +134,12 @@ class _ListaState extends State<Lista> {
     }
   }
 
-  void _eliminarProducto(String codigo){
-    productosProvider.eliminarProductos(codigo)
-    .then((data){
-      muestraMensaje(data);
+  void _eliminarProducto(String codigo) {
+    //usamos el settstate para evitar que el Dismissible muestre error
+    setState(() {
+      productosProvider.eliminarProductos(codigo).then((data) {
+        muestraMensaje(data);
+      });
     });
   }
 }

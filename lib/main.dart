@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:productos/views/detalle.dart';
 import 'package:productos/views/lista.dart';
 
@@ -13,12 +14,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-     // home: Lista(),
-     initialRoute: "lista",
+      // home: Lista(),
+      initialRoute: "lista",
       routes: {
-        'lista' : (context) => Lista(),
+        'lista': (context) => Lista(),
         'detalle': (context) => Detalle(),
       },
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+      //const Locale('en'), // Ingles
+        const Locale('es'), // Español
+      ],
     );
   }
 }
